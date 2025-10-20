@@ -33,16 +33,14 @@ const Navbar = () => {
                 <MyLink to={"/about"}>About Us</MyLink>
             </li>
             <li>
-                <MyLink to={"/profile"}>Profile</MyLink>
-            </li>
-            
-            <li>
                 <MyLink to={"/signup"}>Sign Up</MyLink>
             </li>
             {
               user&&  <>
                 <li><MyLink to={"/profile"}>Profile</MyLink></li>
                 <li><MyLink to={"/dashboard"}>Dashboard</MyLink></li>
+                <li><MyLink to={"/orders"}>Orders</MyLink></li>
+
               </>
               
             }
@@ -59,7 +57,6 @@ const Navbar = () => {
             }
               
             
-      <ToastContainer />
       </MyContainer>
     </div>
   );
