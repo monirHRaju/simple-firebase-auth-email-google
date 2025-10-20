@@ -35,10 +35,10 @@ const Navbar = () => {
             <li>
                 <MyLink to={"/signup"}>Sign Up</MyLink>
             </li>
+            <li><MyLink to={"/dashboard"}>Dashboard</MyLink></li>
             {
               user&&  <>
                 <li><MyLink to={"/profile"}>Profile</MyLink></li>
-                <li><MyLink to={"/dashboard"}>Dashboard</MyLink></li>
                 <li><MyLink to={"/orders"}>Orders</MyLink></li>
 
               </>
