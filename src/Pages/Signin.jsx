@@ -1,6 +1,6 @@
 import React, { use, useState } from "react";
 import MyContainer from "../Components/MyContainer";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "../Firebase/Firebase.config";
 import { toast, ToastContainer } from "react-toastify";
@@ -15,6 +15,12 @@ const Signin = () => {
   const googleProvider = new GoogleAuthProvider();
 
   const {signInUser} = use(AuthContext)
+
+   //redirect to last location
+    const location = useLocation()
+    const navigate = useNavigate()
+    console.log(location);
+    
 
   const handleSignOut = (e) => {
         e.preventDefault();
@@ -40,6 +46,10 @@ const Signin = () => {
     signInUser(email, password)
       .then((res) => {
         setUser(res.user);
+        //empty input fields
+        event.target.reset()
+        // navigate to last location 
+        navigate(location.state || '/')
         toast.success("Signed in Successfully!");
       })
       .catch((error) => toast.error(error.message));
@@ -65,6 +75,8 @@ const Signin = () => {
     signInWithPopup(auth, googleProvider)
     .then((res) => {
         setUser(res.user);
+        // navigate to last location 
+        navigate(location.state || '/')
         toast.success("Signed in Successfully!");
       })
       .catch((error) => toast.error(error.message));
