@@ -12,9 +12,9 @@ const Signin = () => {
   const [user, setUser] = useState(null);
   const [show, setShow] = useState(false);
 
-  const googleProvider = new GoogleAuthProvider();
+  // const googleProvider = new GoogleAuthProvider();
 
-  const {signInUser} = use(AuthContext)
+  const {signInUser, signInWithGoogle} = use(AuthContext)
 
    //redirect to last location
     const location = useLocation()
@@ -71,8 +71,20 @@ const Signin = () => {
   //     .catch((error) => toast.error(error.message));
   // };
 
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, googleProvider)
+  // const signInWithGoogle = () => {
+  //   signInWithPopup(auth, googleProvider)
+  //   .then((res) => {
+  //       setUser(res.user);
+  //       // navigate to last location 
+  //       navigate(location.state || '/')
+  //       toast.success("Signed in Successfully!");
+  //     })
+  //     .catch((error) => toast.error(error.message));
+
+  // }
+
+  const signInGoogleUser = () => {
+    signInWithGoogle()
     .then((res) => {
         setUser(res.user);
         // navigate to last location 
@@ -80,7 +92,6 @@ const Signin = () => {
         toast.success("Signed in Successfully!");
       })
       .catch((error) => toast.error(error.message));
-
   }
 
   return (
@@ -163,7 +174,7 @@ const Signin = () => {
                 {/* Google Signin */}
                 <button
                   type="button"
-                  onClick={signInWithGoogle}
+                  onClick={signInGoogleUser}
                   className="flex items-center justify-center gap-3 bg-white text-gray-800 px-5 py-2 rounded-lg w-full font-semibold hover:bg-gray-100 transition-colors cursor-pointer"
                 >
                   <img
