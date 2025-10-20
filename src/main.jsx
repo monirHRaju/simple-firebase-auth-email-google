@@ -1,14 +1,30 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
+
 import { RouterProvider } from 'react-router'
-import Root from './Pages/Root.jsx'
+
 import { router } from './Router/Router.jsx'
+import AuthProvider from './context/AuthContext/AuthProvider.jsx'
+
+// auth context provider in single page example
+// export const AuthContext = createContext(null)
+// const authInfo = {
+//   email: 'potato@alu.com'
+// }
+// <StrictMode>
+//     <AuthContext value={authInfo}>
+//       <RouterProvider router={router}>
+//       </RouterProvider>
+//     </AuthContext>
+//   </StrictMode>,
+
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}>
-    </RouterProvider>
+    <AuthProvider>
+      <RouterProvider router={router}></RouterProvider>
+    </AuthProvider>
   </StrictMode>,
 )

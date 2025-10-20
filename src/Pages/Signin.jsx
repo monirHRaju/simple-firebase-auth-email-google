@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import MyContainer from "../Components/MyContainer";
 import { Link } from "react-router";
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
@@ -6,12 +6,15 @@ import { auth } from "../Firebase/Firebase.config";
 import { toast, ToastContainer } from "react-toastify";
 import { IoEyeOff } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
+import { AuthContext } from "../context/AuthContext/AuthContext";
 
 const Signin = () => {
   const [user, setUser] = useState(null);
   const [show, setShow] = useState(false);
 
   const googleProvider = new GoogleAuthProvider();
+
+  const {signInUser} = use(AuthContext)
 
   const handleSignOut = (e) => {
         e.preventDefault();
@@ -31,16 +34,32 @@ const Signin = () => {
     const password = event.target.password.value;
 
     
-    console.log({email, password});
+    // console.log({email, password});
     
 
-    signInWithEmailAndPassword(auth, email, password)
+    signInUser(email, password)
       .then((res) => {
         setUser(res.user);
         toast.success("Signed in Successfully!");
       })
       .catch((error) => toast.error(error.message));
   };
+
+  // const handleSignInWithEmail = event => {
+  //   event.preventDefault()
+
+  //   const email = event.target.email.value;
+  //   const password = event.target.password.value;
+
+    
+
+  //   signInWithEmailAndPassword(auth, email, password)
+  //     .then((res) => {
+  //       setUser(res.user);
+  //       toast.success("Signed in Successfully!");
+  //     })
+  //     .catch((error) => toast.error(error.message));
+  // };
 
   const signInWithGoogle = () => {
     signInWithPopup(auth, googleProvider)

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { Link } from "react-router";
 import MyContainer from "./MyContainer";
 import { FaEye } from "react-icons/fa";
-import { auth } from "../Firebase/Firebase.config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+// import { auth } from "../Firebase/Firebase.config";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
 import { toast, ToastContainer } from "react-toastify";
 import { IoEyeOff } from "react-icons/io5";
+import { AuthContext } from "../context/AuthContext/AuthContext";
 
 const SignUp = () => {
   const [user, setUser] = useState([]);
@@ -13,61 +14,95 @@ const SignUp = () => {
   const [show, setShow] = useState(false);
   // const [success, setSuccess] = useState('')
 
+  const {createUser} = use(AuthContext)
+  
   const handleSignUp = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     const email = e.target.email.value;
     const password = e.target.password.value;
 
     // reset state message
     setError("");
 
-    if (password.length < 6) {
-      toast.error("Password should at least 6 characters");
-      return;
-    }
-
-    // const regEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]).{6,}$/;
-
-    // if(!regEx.test(password)){
-    //     toast.error('Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.')
-    //     return
-    // }
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((result) => {
-        setUser(result.user);
-        console.log(result);
-        toast.success("Signed Up successfully!");
+    createUser(email, password)
+      .then(result => {
+          // setUser(result.user);
+          console.log(result);
+          toast.success("Signed Up successfully!");
+        })
+        .catch((error) => {
+          // setError(error.message);
+          if (error.code === "auth/email-already-in-use") {
+            toast.error("User already exists in the database.");
+          } 
+          else if (error.code === "auth/invalid-email") {
+            toast.error("Invalid email address.");
+          } 
+          else if (error.code === "auth/invalid-credential") {
+            toast.error("Invalid Password.");
+          } 
+          else {
+            toast.error("An unexpected error occurred. Please try again.");
+            console.error(error.message);
+          }
       })
-      .catch((error) => {
-        setError(error.message);
-        if (error.code === "auth/email-already-in-use") {
-          toast.error("User already exists in the database.");
-        } else if (error.code === "auth/invalid-email") {
-          toast.error("Invalid email address.");
-        } else if (error.code === "auth/weak-password") {
-          toast.error("Password is too weak. Use at least 6 characters.");
-        } else if (error.code === "auth/missing-password") {
-          toast.error("Please enter a password.");
-        } else if (error.code === "auth/user-not-found") {
-          toast.error("No user found with this email.");
-        } else if (error.code === "auth/wrong-password") {
-          toast.error("Incorrect password. Please try again.");
-        } else if (error.code === "auth/too-many-requests") {
-          toast.error("Too many login attempts. Please try again later.");
-        } else if (error.code === "auth/network-request-failed") {
-          toast.error("Network error. Please check your internet connection.");
-        } else if (error.code === "auth/invalid-credential") {
-          toast.error("Invalid credentials. Please try again.");
-        } else if (error.code === "auth/user-disabled") {
-          toast.error("This account has been disabled by an administrator.");
-        } else {
-          toast.error("An unexpected error occurred. Please try again.");
-          console.error(error);
-        }
-      });
+  }
 
-    // console.log('input data', {email, password});
-  };
+  // const handleSignUp = (e) => {
+  //   e.preventDefault();
+  //   const email = e.target.email.value;
+  //   const password = e.target.password.value;
+
+  //   // reset state message
+  //   setError("");
+
+  //   if (password.length < 6) {
+  //     toast.error("Password should at least 6 characters");
+  //     return;
+  //   }
+
+  //   // const regEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]).{6,}$/;
+
+  //   // if(!regEx.test(password)){
+  //   //     toast.error('Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.')
+  //   //     return
+  //   // }
+  //   createUserWithEmailAndPassword(auth, email, password)
+  //     .then((result) => {
+  //       setUser(result.user);
+  //       console.log(result);
+  //       toast.success("Signed Up successfully!");
+  //     })
+  //     .catch((error) => {
+  //       setError(error.message);
+  //       if (error.code === "auth/email-already-in-use") {
+  //         toast.error("User already exists in the database.");
+  //       } else if (error.code === "auth/invalid-email") {
+  //         toast.error("Invalid email address.");
+  //       } else if (error.code === "auth/weak-password") {
+  //         toast.error("Password is too weak. Use at least 6 characters.");
+  //       } else if (error.code === "auth/missing-password") {
+  //         toast.error("Please enter a password.");
+  //       } else if (error.code === "auth/user-not-found") {
+  //         toast.error("No user found with this email.");
+  //       } else if (error.code === "auth/wrong-password") {
+  //         toast.error("Incorrect password. Please try again.");
+  //       } else if (error.code === "auth/too-many-requests") {
+  //         toast.error("Too many login attempts. Please try again later.");
+  //       } else if (error.code === "auth/network-request-failed") {
+  //         toast.error("Network error. Please check your internet connection.");
+  //       } else if (error.code === "auth/invalid-credential") {
+  //         toast.error("Invalid credentials. Please try again.");
+  //       } else if (error.code === "auth/user-disabled") {
+  //         toast.error("This account has been disabled by an administrator.");
+  //       } else {
+  //         toast.error("An unexpected error occurred. Please try again.");
+  //         console.error(error);
+  //       }
+  //     });
+
+  //   // console.log('input data', {email, password});
+  // };
 
   return (
     <div className="min-h-[96vh] flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 relative overflow-hidden">
